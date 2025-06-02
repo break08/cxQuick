@@ -47,7 +47,7 @@ setup(
         path = os.path.abspath ("temp/setup.py")
         runner = f'python "{path}" build'
         text9.config (text = "Success")
-        os.environ["sePYTHONIOENCODING"] = "utf-8"
+        os.environ["PYTHONIOENCODING"] = "utf-8"
         os.system(runner)
         messagebox.showinfo("Success", "Build completed successfully!")
     else:
