@@ -7,11 +7,7 @@ def browse_file():
     if file_path:
         entry1.delete(1.0, tk.END)
         entry1.insert(tk.END, file_path)
-def get_icon():
-    icon_path = filedialog.askopenfilename(filetypes=[("Icon files", "*.ico")])
-    if icon_path:
-        entry5.delete(1.0, tk.END)
-        entry5.insert(tk.END, icon_path)
+
 def output():
     output_path = filedialog.askdirectory()
     if output_path:
@@ -23,9 +19,9 @@ def start():
     name = entry2.get("1.0", tk.END).strip()
     version = entry3.get("1.0", tk.END).strip()
     description = entry4.get("1.0", tk.END).strip()
-    icon = entry5.get("1.0", tk.END).strip()
-    base = box1.get()
     outputf = entry6.get("1.0", tk.END).strip()
+    base = ""
+    icon = ""
     content = f"""from cx_Freeze import setup, Executable
 build_exe_options = {{
     "packages": ["os"],
@@ -55,7 +51,7 @@ setup(
 
 main = tk.Tk()
 main.title ("cxQuick")
-main.geometry("650x500")
+main.geometry("700x500")
 main.resizable(False, False)
 
 text1 = tk.Label (main, text = ".py file path")
@@ -74,14 +70,6 @@ text4 = tk.Label (main, text = "Description")
 text4.place (x = 10, y = 160)
 entry4 = tk.Text (main, height = 1, width = 50)
 entry4.place (x = 10, y = 180)
-text5 = tk.Label (main, text = "Icon path")
-text5.place (x = 10, y = 210)
-entry5 = tk.Text (main, height = 1, width = 50)
-entry5.place (x = 10, y = 230)
-text6 = tk.Label (main, text = "Base")
-text6.place (x = 10, y = 260)
-box1 = ttk.Combobox(main, values=["Win32GUI", "Console"], width=63)
-box1.place(x = 10, y = 280)
 text7 = tk.Label (main, text = "Output directory")
 text7.place (x = 10, y = 310)
 entry6 = tk.Text (main, height = 1, width = 50)
@@ -92,13 +80,13 @@ text9 = tk.Label (main, text = "Waiting for input...", bg = "white")
 text9.place (x = 10, y = 380)
 text10 = tk.Label (main, text = "*Note : Please set the output directory to an empty directory")
 text10.place (x = 10, y = 410)
+text11 = tk.Label (main, text = "Libraries")
+text11.place (x = 10, y = 440)
+entry12 = tk.Text (main, height = 1, width = 50)
+entry12.place (x = 10, y = 460)
 
-button1 = tk.Button(main, text="Browse .py file", command=browse_file)
-button1.place(x = 470, y = 30)
 button2 = tk.Button(main, text="Build", command=start)
 button2.place (x = 470, y = 120)
-button3 = tk.Button (main, text = "Browse .ico file", command = get_icon)
-button3.place (x = 470, y = 60)
 button4 = tk.Button(main, text="Browse Output Directory", command=output)
 button4.place (x = 470, y = 90)
 
