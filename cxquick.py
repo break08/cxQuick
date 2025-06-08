@@ -35,7 +35,7 @@ setup(
     name="{name}",
     version="{version}",
     description="{description}",
-    options={{"build_exe": buid_exe_options}},
+    options={{"build_exe": build_exe_options}},
     executables=[Executable("{filepath}", base="{base}", icon="{icon}")],
 )
 """
