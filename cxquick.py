@@ -1,4 +1,3 @@
-from cx_Freeze import setup, Executable
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import os
@@ -28,7 +27,7 @@ def start():
     base = box1.get()
     outputf = entry6.get("1.0", tk.END).strip()
     content = f"""from cx_Freeze import setup, Executable
-buid_exe_options = {{
+build_exe_options = {{
     "packages": ["os"],
     "build_exe": "{outputf}"
 }}
