@@ -1,12 +1,19 @@
 import tkinter as tk
-from tkinter import ttk, filedialog, messagebox
+from tkinter import filedialog, messagebox
 import os
+from pathlib import Path
+import threading
 
 def browse_file():
-    file_path = filedialog.askopenfilename(filetypes=[("Python files", "*.py")])
-    if file_path:
-        entry1.delete(1.0, tk.END)
-        entry1.insert(tk.END, file_path)
+    def running ():
+        parentfolder = Path(__file__).parent
+        list_file = os.listdir(parentfolder)
+        if "executable.py" in list_file:
+            command = f'python executable.py'
+            os.system(command)
+        elif "executable.exe" in list_file:
+            os.startfile("executable.exe")
+    threading.Thread(target=running).start()
 
 def output():
     output_path = filedialog.askdirectory()
@@ -54,7 +61,7 @@ main.title ("cxQuick")
 main.geometry("700x500")
 main.resizable(False, False)
 
-text1 = tk.Label (main, text = ".py file path")
+text1 = tk.Label (main, text = "Executables")
 text1.place (x = 10, y = 10)
 entry1 = tk.Text (main, height = 1, width = 50)
 entry1.place (x = 10, y = 30)
@@ -85,6 +92,8 @@ text11.place (x = 10, y = 440)
 entry12 = tk.Text (main, height = 1, width = 50)
 entry12.place (x = 10, y = 460)
 
+button1 = tk.Button(main, text="Add executables", command=browse_file)
+button1.place (x = 470, y = 30)
 button2 = tk.Button(main, text="Build", command=start)
 button2.place (x = 470, y = 120)
 button4 = tk.Button(main, text="Browse Output Directory", command=output)
