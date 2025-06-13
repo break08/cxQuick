@@ -28,9 +28,9 @@ def executable_new():
     if target_name == "":
         target_name = os.path.basename(script).replace(".py", ".exe")
     executables_name = f"""Executable(script={script}, base={base}, target_name="{target_name}", icon="{icon}"),\n"""
+    entry1a.insert (tk.END, executables_name)
     with open("dataexecutables.json", "r", encoding="utf-8") as f:
         data = json.load(f)
-    entry1a.insert (tk.END, executables_name)
     with open ("dataexecutables.json", "w", encoding="utf-8") as f:
         data["executables"].append(f"{executables_name}")
         json.dump(data, f, indent=4)
@@ -47,7 +47,7 @@ exe.title("Choose Executable")
 exe.geometry("800x210")
 exe.resizable(False, False)
 
-text1a = tk.Label(exe, text="Executable Path (Preview):")
+text1a = tk.Label(exe, text="Executable Path:")
 text1a.place (x=10, y=10)
 
 entry1a = tk.Text(exe, height=10, width=50)
@@ -85,5 +85,4 @@ button3a = tk.Button(exe, text="New Executable", command = executable_new)
 button3a.place (x=670, y=90)
 button4a = tk.Button(exe, text="Clear All", command=clear)
 button4a.place (x=670, y=120)
-
 exe.mainloop()

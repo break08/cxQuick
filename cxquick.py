@@ -3,6 +3,7 @@ from tkinter import filedialog, messagebox
 import os
 from pathlib import Path
 import threading
+import json
 
 def browse_file():
     def running ():
@@ -61,24 +62,33 @@ main.title ("cxQuick")
 main.geometry("700x500")
 main.resizable(False, False)
 
+def executables_checking():
+    with open ("dataexecutables.json", "r") as f:
+        data = json.load(f)
+        edata = data["executables"]
+        entry1.delete(1.0, tk.END)
+        for item in edata:
+            entry1.insert(tk.END, item + "\n")
+main.after(100, executables_checking)
+
 text1 = tk.Label (main, text = "Executables")
 text1.place (x = 10, y = 10)
-entry1 = tk.Text (main, height = 1, width = 50)
+entry1 = tk.Text (main, height = 8, width = 50)
 entry1.place (x = 10, y = 30)
 text2 = tk.Label (main, text = "Name")
-text2.place (x = 10, y = 60)
+text2.place (x = 10, y = 180)
 entry2 = tk.Text (main, height = 1, width = 50)
-entry2.place (x = 10, y = 80)
+entry2.place (x = 10, y = 200)
 text3 = tk.Label (main, text = "Version")
-text3.place (x = 10, y = 110)
+text3.place (x = 10, y = 220)
 entry3 = tk.Text (main, height = 1, width = 50)
-entry3.place (x = 10, y = 130)
+entry3.place (x = 10, y = 240)
 text4 = tk.Label (main, text = "Description")
-text4.place (x = 10, y = 160)
+text4.place (x = 10, y = 260)
 entry4 = tk.Text (main, height = 1, width = 50)
-entry4.place (x = 10, y = 180)
+entry4.place (x = 10, y = 280)
 text7 = tk.Label (main, text = "Output directory")
-text7.place (x = 10, y = 310)
+text7.place (x = 10, y = 300)
 entry6 = tk.Text (main, height = 1, width = 50)
 entry6.place (x = 10, y = 330)
 text8 = tk.Label (main, text = "Status")
