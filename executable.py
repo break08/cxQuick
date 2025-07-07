@@ -27,7 +27,7 @@ def executable_new():
         base = None
     if target_name == "":
         target_name = os.path.basename(script).replace(".py", ".exe")
-    executables_name = f"""Executable(script={script}, base={base}, target_name="{target_name}", icon="{icon}"),\n"""
+    executables_name = f"""Executable(script="{script}", base="{base}", target_name="{target_name}", icon="{icon}"),\n"""
     entry1a.insert (tk.END, executables_name)
     with open("dataexecutables.json", "r", encoding="utf-8") as f:
         data = json.load(f)
