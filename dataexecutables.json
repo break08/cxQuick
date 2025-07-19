@@ -1,5 +1,3 @@
 {
-    "executables": [
-        "Executable(script=\"C:/Users/Sieu Toc PC/Desktop/my_project/filein2winsandbox/filein2winsandbox.py\", base=\"Win32GUI\", target_name=\"gi\", icon=\"C:/Users/Sieu Toc PC/Desktop/my_project/filein2winsandbox/icon/icon.ico\"),\n"
-    ]
+    "executables": []
 }

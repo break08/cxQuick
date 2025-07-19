@@ -38,9 +38,10 @@ def start_process():
     outputf = os.path.abspath(entry6.get("1.0", tk.END).strip())
     outputf = outputf.replace ("/", "\\")
     executable_get = entry1.get("1.0", tk.END).strip()
+    lib = entry12.get("1.0", tk.END).strip()
     content = f"""from cx_Freeze import setup, Executable
 build_exe_options = {{
-    "packages": ["os"],
+    "packages": [{lib}],
     "build_exe": r"{outputf}"
 }}
 setup(
@@ -74,9 +75,19 @@ setup(
 def build():
     threading.Thread(target=start_process).start()
 
+def executables_clear():
+    entry1.config(start = "normal")
+    entry1.delete(1.0, tk.END)
+    with open("dataexecutables.json", "r", encoding="utf-8") as f:
+        data = json.load(f)
+    with open("dataexecutables.json", "w", encoding="utf-8") as f:
+        data["executables"] = []
+        json.dump(data, f, indent=4)
+    entry1.config(state="disabled")
+
 main = tk.Tk()
 main.title ("cxQuick")
-main.geometry("700x500")
+main.geometry("700x650")
 main.resizable(False, False)
 
 def executables_checking():
@@ -111,22 +122,28 @@ entry6 = tk.Text (main, height = 1, width = 50)
 entry6.place (x = 10, y = 330)
 text10 = tk.Label (main, text = "*Note : Please set the output directory to an empty directory because all data \n in output folder will be replaced with the output files of cx_freeze")
 text10.place (x = 10, y = 360)
-text11 = tk.Label (main, text = "Libraries")
-text11.place (x = 10, y = 440)
+text11 = tk.Label (main, text = 'Libraries (Example: "os", "tkinter")')
+text11.place (x = 10, y = 390)
 entry12 = tk.Text (main, height = 1, width = 50)
-entry12.place (x = 10, y = 460)
+entry12.place (x = 10, y = 420)
 scroll = tk.Scrollbar(main, orient = tk.VERTICAL, command=entry1.yview)
 entry1.config(yscrollcommand=scroll.set)
 scroll.place(x=400, y=30, height=135)
 scroll2 = tk.Scrollbar (main, orient = tk.HORIZONTAL, command = entry1.xview)
 entry1.config(xscrollcommand=scroll2.set)
 scroll2.place(x=10, y=145, width=390)
+text13 = tk.Label (main, text = "Include Files")
+text13.place (x = 10, y = 450)
+entry13 = tk.Text (main, height = 8, width = 50)
+entry13.place (x = 10, y = 470)
 
-button1 = tk.Button(main, text="Add executables", command=browse_file)
+button1 = tk.Button(main, text="Add executables", command=browse_file, width = 19)
 button1.place (x = 470, y = 30)
-button2 = tk.Button(main, text="Build", command=build)
-button2.place (x = 470, y = 120)
-button4 = tk.Button(main, text="Browse Output Directory", command=output)
-button4.place (x = 470, y = 90)
+button2 = tk.Button(main, text="Build", command=build, width = 19)
+button2.place (x = 470, y = 90)
+button3 = tk.Button(main, text="Clear All Executables", command= executables_clear, width = 19)
+button3.place (x = 470, y = 120)
+button4 = tk.Button(main, text="Browse Output Directory", command=output, width = 19)
+button4.place (x = 470, y = 60)
 
 main.mainloop()
