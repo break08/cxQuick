@@ -76,7 +76,7 @@ def build():
     threading.Thread(target=start_process).start()
 
 def executables_clear():
-    entry1.config(start = "normal")
+    entry1.config(state="normal")
     entry1.delete(1.0, tk.END)
     with open("dataexecutables.json", "r", encoding="utf-8") as f:
         data = json.load(f)
@@ -84,6 +84,25 @@ def executables_clear():
         data["executables"] = []
         json.dump(data, f, indent=4)
     entry1.config(state="disabled")
+def includefile_clear():
+    entry13.config (state = "normal")
+    entry13.delete(1.0, tk.END)
+    with open ("include_file_data.json", "r", encoding = "utf-8") as file:
+        data = json.load (file)
+    with open ("include_file_data.json", "w", encoding = "utf-8") as file:
+        data["include"] = []
+        json.dump (data, file, indent=4)
+    entry13.config (state = "disabled")
+def include_file_finder():
+    def running ():
+        parentfolder = Path(__file__).parent
+        list_file = os.listdir(parentfolder)
+        if "include_file.py" in list_file:
+            command = f'python include_file.py'
+            os.system(command)
+        elif "include_file.exe" in list_file:
+            os.startfile("include_file.exe")
+    threading.Thread(target=running).start()    
 
 main = tk.Tk()
 main.title ("cxQuick")
@@ -92,12 +111,19 @@ main.resizable(False, False)
 
 def executables_checking():
     entry1.config (state="normal")
-    with open ("dataexecutables.json", "r") as f:
+    entry13.config(state = "normal")
+    with open ("dataexecutables.json", "r", encoding = "utf-8") as f:
         data = json.load(f)
         edata = data["executables"]
         for item in edata:
-            entry1.insert(tk.END, item + "\n")
+            entry1.insert(tk.END, item)
+    with open ("include_file_data.json", "r", encoding = "utf-8") as file:
+        datafile = json.load (file)
+        edatafile= datafile["include"]
+        for item in edatafile:
+            entry13.insert(tk.END, item)
     entry1.config (state="disabled")
+    entry13.config (state = "disabled")
 main.after(100, executables_checking)
 
 text1 = tk.Label (main, text = "Executables")
@@ -136,14 +162,18 @@ text13 = tk.Label (main, text = "Include Files")
 text13.place (x = 10, y = 450)
 entry13 = tk.Text (main, height = 8, width = 50)
 entry13.place (x = 10, y = 470)
+entry13.config (state = "disabled")
 
 button1 = tk.Button(main, text="Add executables", command=browse_file, width = 19)
 button1.place (x = 470, y = 30)
 button2 = tk.Button(main, text="Build", command=build, width = 19)
-button2.place (x = 470, y = 90)
+button2.place (x = 470, y = 120)
 button3 = tk.Button(main, text="Clear All Executables", command= executables_clear, width = 19)
-button3.place (x = 470, y = 120)
+button3.place (x = 470, y = 150)
 button4 = tk.Button(main, text="Browse Output Directory", command=output, width = 19)
-button4.place (x = 470, y = 60)
-
+button4.place (x = 470, y = 90)
+button5 = tk.Button (main, text = "Add Include Files", width = 19, command=include_file_finder)
+button5.place (x = 470, y = 60)
+button6 = tk.Button (main, text = "Clear All Include Files", command = includefile_clear, width = 19)
+button6.place (x = 470, y = 180)
 main.mainloop()

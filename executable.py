@@ -36,14 +36,9 @@ def executable_new():
         json.dump(data, f, indent=4)
 def clear():
     entry1a.delete(1.0, tk.END)
-    with open("dataexecutables.json", "r", encoding="utf-8") as f:
-        data = json.load(f)
-    with open("dataexecutables.json", "w", encoding="utf-8") as f:
-        data["executables"] = []
-        json.dump(data, f, indent=4)
 
 exe = tk.Tk()
-exe.title("Choose Executable")
+exe.title("Add Executables")
 exe.geometry("800x210")
 exe.resizable(False, False)
 

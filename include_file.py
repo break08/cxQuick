@@ -4,7 +4,8 @@ import json
 
 file_include = tk.Tk()
 file_include.geometry ("420x420")
-file_include.title ("Include Files")
+file_include.title ("Add Include Files")
+file_include.resizable(False, False)
 
 def open_path():
     include = filedialog.askopenfilename()
@@ -17,6 +18,11 @@ def new_file():
         output = entry2b.get()
         element=f'(r"{path}", r"{output}"),\n'
         text01b.insert(tk.END, element)
+        with open ("include_file_data.json", "r", encoding = "utf-8") as file:
+            data = json.load (file)
+        with open ("include_file_data.json", "w", encoding = "utf-8") as file:
+            data["include"].append(element)
+            json.dump (data, file, indent=4)
     else:
         messagebox.showerror ("Error", "Fill the forced field")
 def clear_all():
@@ -38,4 +44,6 @@ direct = tk.Button (file_include, text = "Browse File", command = open_path)
 direct.place (x=10, y=360)
 new_rowb = tk.Button (file_include, text = "New Include File", command = new_file)
 new_rowb.place (x = 90, y = 360)
+clear = tk.Button (file_include, text = "Clear All", command = clear_all)
+clear.place (x = 200, y = 360)
 file_include.mainloop()
