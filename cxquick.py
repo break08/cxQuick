@@ -1,17 +1,32 @@
 import tkinter as tk
-from tkinter import filedialog, messagebox
+from tkinter import filedialog, messagebox, ttk
 import subprocess, os, threading, json
-from pathlib import Path
+
+def runner(py, exe):
+    try:
+        command = f"python {py}"
+        os.system(command)
+    except:
+        try:
+            os.startfile(exe)
+        except Exception as e:
+            messagebox.showerror("Error", f"{e}")
+def opener (jsonfilea, key, entry: tk.Text):
+    with open(jsonfilea, "r", encoding="utf-8") as f:
+        data = json.load(f)
+        edata = data[key]
+        for item in edata:
+            entry.insert(tk.END, item + "\n")
+def cleaner(jsonfilea, key):
+    with open(jsonfilea, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    with open(jsonfilea, "w", encoding="utf-8") as f:
+        data[key] = []
+        json.dump(data, f, indent=4)
 
 def browse_file():
     def running ():
-        parentfolder = Path(__file__).parent
-        list_file = os.listdir(parentfolder)
-        if "executable.py" in list_file:
-            command = f'python executable.py'
-            os.system(command)
-        elif "executable.exe" in list_file:
-            os.startfile("executable.exe")
+        runner("executable.py", "executable.exe")
     threading.Thread(target=running).start()
 
 def output():
@@ -39,10 +54,26 @@ def start_process():
     outputf = outputf.replace ("/", "\\")
     executable_get = entry1.get("1.0", tk.END).strip()
     lib = entry12.get("1.0", tk.END).strip()
+    lib_list = lib.split(",")
+    force_lib  = entry14.get("1.0", tk.END).strip()
+    force_lib_list = force_lib.split(",")
+    exclude_lib = entry15.get("1.0", tk.END).strip()
+    exclude_lib_list = exclude_lib.split(",")
+    fileinclude = entry13.get("1.0", tk.END).strip()
+    if lib_list == [""] or lib_list == ['']:
+        lib_list = []
+    if force_lib_list == [""] or force_lib_list == ['']:
+        force_lib_list = []
+    if exclude_lib_list == [""] or exclude_lib_list == ['']:
+        exclude_lib_list = []
+
     content = f"""from cx_Freeze import setup, Executable
 build_exe_options = {{
-    "packages": [{lib}],
-    "build_exe": r"{outputf}"
+    "packages": {lib_list},
+    "includes": {force_lib_list},
+    "excludes": {exclude_lib_list},
+    "build_exe": r"{outputf}",
+    "include_files": [{fileinclude}],
 }}
 setup(
     name="{name}",
@@ -78,30 +109,16 @@ def build():
 def executables_clear():
     entry1.config(state="normal")
     entry1.delete(1.0, tk.END)
-    with open("dataexecutables.json", "r", encoding="utf-8") as f:
-        data = json.load(f)
-    with open("dataexecutables.json", "w", encoding="utf-8") as f:
-        data["executables"] = []
-        json.dump(data, f, indent=4)
+    cleaner("dataexecutables.json", "executables")
     entry1.config(state="disabled")
 def includefile_clear():
     entry13.config (state = "normal")
     entry13.delete(1.0, tk.END)
-    with open ("include_file_data.json", "r", encoding = "utf-8") as file:
-        data = json.load (file)
-    with open ("include_file_data.json", "w", encoding = "utf-8") as file:
-        data["include"] = []
-        json.dump (data, file, indent=4)
+    cleaner("include_file_data.json", "include")
     entry13.config (state = "disabled")
 def include_file_finder():
     def running ():
-        parentfolder = Path(__file__).parent
-        list_file = os.listdir(parentfolder)
-        if "include_file.py" in list_file:
-            command = f'python include_file.py'
-            os.system(command)
-        elif "include_file.exe" in list_file:
-            os.startfile("include_file.exe")
+        runner("include_file.py", "include_file.exe")
     threading.Thread(target=running).start()    
 
 main = tk.Tk()
@@ -112,16 +129,8 @@ main.resizable(False, False)
 def executables_checking():
     entry1.config (state="normal")
     entry13.config(state = "normal")
-    with open ("dataexecutables.json", "r", encoding = "utf-8") as f:
-        data = json.load(f)
-        edata = data["executables"]
-        for item in edata:
-            entry1.insert(tk.END, item)
-    with open ("include_file_data.json", "r", encoding = "utf-8") as file:
-        datafile = json.load (file)
-        edatafile= datafile["include"]
-        for item in edatafile:
-            entry13.insert(tk.END, item)
+    opener("dataexecutables.json", "executables", entry1)
+    opener("include_file_data.json", "include", entry13)
     entry1.config (state="disabled")
     entry13.config (state = "disabled")
 main.after(100, executables_checking)
@@ -148,7 +157,7 @@ entry6 = tk.Text (main, height = 1, width = 50)
 entry6.place (x = 10, y = 330)
 text10 = tk.Label (main, text = "*Note : Please set the output directory to an empty directory because all data \n in output folder will be replaced with the output files of cx_freeze")
 text10.place (x = 10, y = 360)
-text11 = tk.Label (main, text = 'Libraries (Example: "os", "tkinter")')
+text11 = tk.Label (main, text = 'Libraries (Example: os,tkinter)')
 text11.place (x = 10, y = 390)
 entry12 = tk.Text (main, height = 1, width = 50)
 entry12.place (x = 10, y = 420)
@@ -160,11 +169,30 @@ entry1.config(xscrollcommand=scroll2.set)
 scroll2.place(x=10, y=145, width=390)
 text13 = tk.Label (main, text = "Include Files")
 text13.place (x = 10, y = 450)
-entry13 = tk.Text (main, height = 8, width = 50)
+entry13 = tk.Text (main, height = 8, width = 50, wrap = tk.NONE)
 entry13.place (x = 10, y = 470)
 entry13.config (state = "disabled")
 
-button1 = tk.Button(main, text="Add executables", command=browse_file, width = 19)
+text14 = tk.Label (main, text = "Optimize")
+text14.place (x = 450, y = 220)
+optimize = ttk.Combobox (main, values=["0", "1", "2"], width=17)
+optimize.place (x = 450, y = 240)
+optimize.set("0")
+
+text15 = tk.Label (main, text = 'Force Import (Example: os,tkinter)')
+text15.place (x = 450, y = 260)
+entry14 = tk.Text (main, width = 25, height = 1)
+entry14.place (x = 450, y = 280)
+
+text16 = tk.Label (main, text = 'Exclude Libraries (Example: os,tkinter)')
+text16.place (x = 450, y = 300)
+entry15 = tk.Text (main, width = 25, height = 1)
+entry15.place (x = 450, y = 330)
+
+checkbox1 = tk.Checkbutton (main, text = "Include msvcr")
+checkbox1.place (x = 450, y = 350)
+
+button1 = tk.Button(main, text="Add Executables", command=browse_file, width = 19)
 button1.place (x = 470, y = 30)
 button2 = tk.Button(main, text="Build", command=build, width = 19)
 button2.place (x = 470, y = 120)
@@ -172,8 +200,8 @@ button3 = tk.Button(main, text="Clear All Executables", command= executables_cle
 button3.place (x = 470, y = 150)
 button4 = tk.Button(main, text="Browse Output Directory", command=output, width = 19)
 button4.place (x = 470, y = 90)
-button5 = tk.Button (main, text = "Add Include Files", width = 19, command=include_file_finder)
+button5 = tk.Button (main, text = "Add Include Files/Folders", width = 19, command=include_file_finder)
 button5.place (x = 470, y = 60)
-button6 = tk.Button (main, text = "Clear All Include Files", command = includefile_clear, width = 19)
+button6 = tk.Button (main, text = "Clear All Included", command = includefile_clear, width = 19)
 button6.place (x = 470, y = 180)
 main.mainloop()

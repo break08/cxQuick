@@ -26,16 +26,27 @@ def executable_new():
     if base == "":
         base = None
     if target_name == "":
-        target_name = os.path.basename(script).replace(".py", ".exe")
-    executables_name = f"""Executable(script="{script}", base="{base}", target_name="{target_name}", icon="{icon}"),\n"""
+        target_name = None
+    executables_name = f"""Executable(script=r"{script}", base={base}, target_name={target_name}, icon={icon}),\n"""
     entry1a.insert (tk.END, executables_name)
-    with open("dataexecutables.json", "r", encoding="utf-8") as f:
-        data = json.load(f)
-    with open ("dataexecutables.json", "w", encoding="utf-8") as f:
-        data["executables"].append(f"{executables_name}")
-        json.dump(data, f, indent=4)
 def clear():
     entry1a.delete(1.0, tk.END)
+    with open("dataexecutables.json", "r", encoding="utf-8") as f:
+        data = json.load(f)
+    with open("dataexecutables.json", "w", encoding="utf-8") as f:
+        data["executables"] = []
+        json.dump(data, f, indent=4)
+def save():
+    with open("dataexecutables.json", "r", encoding="utf-8") as f:
+        data = json.load(f)
+    datawrite = entry1a.get("1.0", tk.END).strip()
+    with open ("dataexecutables.json", "w", encoding="utf-8") as f:
+        data["executables"] = []
+        for line in datawrite.splitlines():
+            with open ("dataexecutables.json", "w", encoding="utf-8") as f:
+                data["executables"].append(f"{line}"+ "\n")
+                json.dump(data, f, indent=4)
+    messagebox.showinfo("Success", "Data saved successfully")
 
 exe = tk.Tk()
 exe.title("Add Executables")
@@ -45,7 +56,7 @@ exe.resizable(False, False)
 text1a = tk.Label(exe, text="Executable Path:")
 text1a.place (x=10, y=10)
 
-entry1a = tk.Text(exe, height=10, width=50)
+entry1a = tk.Text(exe, height=10, width=50, wrap=tk.NONE)
 entry1a.place (x=10, y=30)
 
 text2a = tk.Label (exe, text = ".py file path:")
@@ -80,4 +91,13 @@ button3a = tk.Button(exe, text="New Executable", command = executable_new)
 button3a.place (x=670, y=90)
 button4a = tk.Button(exe, text="Clear All", command=clear)
 button4a.place (x=670, y=120)
+button5a = tk.Button (exe, text = "Save", command = save)
+button5a.place(x=670, y=150)
+
+with open("dataexecutables.json", "r", encoding="utf-8") as f:
+    data = json.load(f)
+    edata = data["executables"]
+    for item in edata:
+        entry1a.insert(tk.END, item)
+
 exe.mainloop()
