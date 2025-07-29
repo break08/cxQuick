@@ -18,16 +18,22 @@ def executable_new():
     icon = entry4a.get("1.0", tk.END).strip()
     base = box1.get()
     target_name = entry5a.get("1.0", tk.END).strip()
+    executables_name = f"""Executable(script=r"{script}", base="{base}", target_name="{target_name}", icon="{icon}"),\n"""
     if script == "":
         messagebox.showerror("Error", "Please select a .py file.")
         return
     if icon == "":
-        icon = None
+        executables_name = f"""Executable(script=r"{script}", base="{base}", target_name="{target_name}", icon=None),\n"""
     if base == "":
-        base = None
+       executables_name = f"""Executable(script=r"{script}", base=None, target_name="{target_name}", icon="{icon}"),\n"""
     if target_name == "":
-        target_name = None
-    executables_name = f"""Executable(script=r"{script}", base={base}, target_name={target_name}, icon={icon}),\n"""
+       executables_name = f"""Executable(script=r"{script}", base=None, target_name=None, icon="{icon}"),\n"""
+    if target_name == "" and base == "":
+         executables_name = f"""Executable(script=r"{script}", base=None, target_name=None, icon=None),\n"""
+    if icon == "" and base == "":
+        executables_name = f"""Executable(script=r"{script}", base=None, target_name="{target_name}", icon=None),\n"""
+    if icon == "" and target_name == "":
+        executables_name = f"""Executable(script=r"{script}", base="{base}", target_name=None, icon=None),\n"""
     entry1a.insert (tk.END, executables_name)
 def clear():
     entry1a.delete(1.0, tk.END)

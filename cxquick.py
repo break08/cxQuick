@@ -16,7 +16,7 @@ def opener (jsonfilea, key, entry: tk.Text):
         data = json.load(f)
         edata = data[key]
         for item in edata:
-            entry.insert(tk.END, item + "\n")
+            entry.insert(tk.END, item)
 def cleaner(jsonfilea, key):
     with open(jsonfilea, "r", encoding="utf-8") as f:
         data = json.load(f)
@@ -83,6 +83,7 @@ setup(
     executables=[{executable_get}],
 )
 """
+    outputf = os.path.normpath (outputf)
     if len(os.listdir(outputf)) == 0:
         try:
             with open ("saves/setup.py", "w", encoding="utf-8") as f:
