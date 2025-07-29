@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 import subprocess, os, threading, json
-
+    
 def runner(py, exe):
     try:
         command = f"python {py}"
@@ -23,7 +23,6 @@ def cleaner(jsonfilea, key):
     with open(jsonfilea, "w", encoding="utf-8") as f:
         data[key] = []
         json.dump(data, f, indent=4)
-
 def browse_file():
     def running ():
         runner("executable.py", "executable.exe")
@@ -39,14 +38,24 @@ def start_process():
     result.geometry ("840x630")
     result.title ("Output")
     result.resizable (False, False)
-    output_text = tk.Text(result, height=37, width=100, bg = "black", fg = "white", wrap = tk.NONE)
+    output_text = tk.Text(result, height=20, width=100, bg = "black", fg = "white", wrap = tk.NONE)
     output_text.pack()
     scrollx = tk.Scrollbar(result, orient=tk.HORIZONTAL, command=output_text.xview)
     output_text.config(xscrollcommand=scrollx.set)
     scrolly = tk.Scrollbar(result, orient=tk.VERTICAL, command=output_text.yview)
     output_text.config(yscrollcommand=scrolly.set)
-    scrollx.place(x = 10, y = 600, width = 810)
-    scrolly.place(x = 820, y = 0, height = 600)
+    scrollx.place(x = 10, y = 320, width = 810)
+    scrolly.place(x = 820, y = 0, height = 320)
+    text1bc = tk.Label (result, text = "Error")
+    text1bc.place (x = 10, y = 340)
+    errorlb = tk.Text (result, height = 10, width = 100, bg = "black", fg = "white", wrap = tk.NONE)
+    errorlb.place (x = 10, y = 360)
+    scrollx2 = tk.Scrollbar(result, orient=tk.HORIZONTAL, command=errorlb.xview)
+    errorlb.config(xscrollcommand=scrollx2.set)
+    scrolly2 = tk.Scrollbar(result, orient=tk.VERTICAL, command=errorlb.yview)
+    errorlb.config(yscrollcommand=scrolly2.set)
+    scrollx2.place(x = 10, y = 530, width = 810)
+    scrolly2.place(x = 820, y = 360, height = 190)
     name = entry2.get("1.0", tk.END).strip()
     version = entry3.get("1.0", tk.END).strip()
     description = entry4.get("1.0", tk.END).strip()
@@ -74,6 +83,8 @@ build_exe_options = {{
     "excludes": {exclude_lib_list},
     "build_exe": r"{outputf}",
     "include_files": [{fileinclude}],
+    "optimize": {int(optimize.get())},
+    "include_msvcr": {msvcr},
 }}
 setup(
     name="{name}",
@@ -85,21 +96,19 @@ setup(
 """
     outputf = os.path.normpath (outputf)
     if len(os.listdir(outputf)) == 0:
-        try:
-            with open ("saves/setup.py", "w", encoding="utf-8") as f:
-                f.write(content)
-            path = os.path.abspath ("saves/setup.py")
-            path = path.replace ("/", "\\")
-            runner = f'python "{path}" build'
-            building = subprocess.run (
-                f"chcp 65001 && {runner}",
-                text=True,
-                shell=True,
-                capture_output=True)
-            output_text.insert(tk.END, building.stdout)
-            messagebox.showinfo("Success", "Build completed successfully!")
-        except Exception as e:
-            messagebox.showerror("Error", f"An error occurred: {e}")
+        with open ("saves/setup.py", "w", encoding="utf-8") as f:
+            f.write(content)
+        path = os.path.abspath ("saves/setup.py")
+        path = path.replace ("/", "\\")
+        runner = f'python "{path}" build'
+        building = subprocess.run (
+            f"chcp 65001 && {runner}",
+            text=True,
+            shell=True,
+            capture_output=True)
+        output_text.insert(tk.END, building.stdout)
+        errorlb.insert(tk.END, building.stderr)
+        messagebox.showinfo("Complete", "Build completed!")
     else:
         messagebox.showerror("Error", "Output directory is not empty! Please choose an empty directory.")
     result.mainloop()
@@ -126,6 +135,12 @@ main = tk.Tk()
 main.title ("cxQuick")
 main.geometry("700x650")
 main.resizable(False, False)
+
+msvcr = tk.IntVar()
+if msvcr == 1:
+    msvcr = True
+else:
+    msvcr = False
 
 def executables_checking():
     entry1.config (state="normal")
@@ -190,7 +205,7 @@ text16.place (x = 450, y = 300)
 entry15 = tk.Text (main, width = 25, height = 1)
 entry15.place (x = 450, y = 330)
 
-checkbox1 = tk.Checkbutton (main, text = "Include msvcr")
+checkbox1 = tk.Checkbutton (main, text = "Include msvcr", variable=msvcr)
 checkbox1.place (x = 450, y = 350)
 
 button1 = tk.Button(main, text="Add Executables", command=browse_file, width = 19)
