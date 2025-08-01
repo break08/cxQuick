@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 import subprocess, os, threading, json
-    
+
 def runner(py, exe):
     try:
         command = f"python {py}"
@@ -12,6 +12,7 @@ def runner(py, exe):
         except Exception as e:
             messagebox.showerror("Error", f"{e}")
 def opener (jsonfilea, key, entry: tk.Text):
+    entry.delete (1.0, tk.END)
     with open(jsonfilea, "r", encoding="utf-8") as f:
         data = json.load(f)
         edata = data[key]
@@ -84,7 +85,7 @@ build_exe_options = {{
     "build_exe": r"{outputf}",
     "include_files": [{fileinclude}],
     "optimize": {int(optimize.get())},
-    "include_msvcr": {msvcr},
+    "include_msvcr": {msvcr_var},
 }}
 setup(
     name="{name}",
@@ -136,20 +137,12 @@ main.title ("cxQuick")
 main.geometry("700x650")
 main.resizable(False, False)
 
-msvcr = tk.IntVar()
-if msvcr == 1:
-    msvcr = True
+msvcr_var = None
+msvcr = tk.IntVar(value = 1)
+if msvcr.get() == 1:
+    msvcr_var = True
 else:
-    msvcr = False
-
-def executables_checking():
-    entry1.config (state="normal")
-    entry13.config(state = "normal")
-    opener("dataexecutables.json", "executables", entry1)
-    opener("include_file_data.json", "include", entry13)
-    entry1.config (state="disabled")
-    entry13.config (state = "disabled")
-main.after(100, executables_checking)
+    msvcr_var = False
 
 text1 = tk.Label (main, text = "Executables")
 text1.place (x = 10, y = 10)
@@ -208,6 +201,18 @@ entry15.place (x = 450, y = 330)
 checkbox1 = tk.Checkbutton (main, text = "Include msvcr", variable=msvcr)
 checkbox1.place (x = 450, y = 350)
 
+menubar = tk.Menu (main)
+main.config(menu=menubar)
+filemenu = tk.Menu (menubar)
+menubar.add_cascade(label="File", menu=filemenu)
+filemenu.add_command(label="Exit", command=main.quit)
+tools = tk.Menu (menubar)
+menubar.add_cascade(label = "Tools", menu=tools)
+tools.add_command(label = "Install cx_Freeze", command=lambda: os.startfile("cxfreeze_install.bat"))
+tools.add_command(label = "About cx_Freeze", command=lambda: os.startfile("about_cxfreeze.bat"))
+about = tk.Menu (menubar)
+menubar.add_cascade (label = "About", command=lambda: os.startfile ("about.html"))
+
 button1 = tk.Button(main, text="Add Executables", command=browse_file, width = 19)
 button1.place (x = 470, y = 30)
 button2 = tk.Button(main, text="Build", command=build, width = 19)
@@ -220,4 +225,15 @@ button5 = tk.Button (main, text = "Add Include Files/Folders", width = 19, comma
 button5.place (x = 470, y = 60)
 button6 = tk.Button (main, text = "Clear All Included", command = includefile_clear, width = 19)
 button6.place (x = 470, y = 180)
+
+def executables_checking():
+    entry1.config (state="normal")
+    entry13.config(state = "normal")
+    opener("dataexecutables.json", "executables", entry1)
+    opener("include_file_data.json", "include", entry13)
+    entry1.config (state="disabled")
+    entry13.config (state = "disabled")
+    main.after(50, executables_checking)
+executables_checking()
+
 main.mainloop()
