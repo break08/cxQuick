@@ -1,0 +1,6 @@
+{
+    "executables": [
+        "Executable(script=r\"C:/Users/lmdun/OneDrive/Desktop/my_project/setup.py\", base=\"Win32GUI\", target_name=None, icon=None),\n",
+        "Executable(script=r\"C:/Users/lmdun/OneDrive/Desktop/my_project/filein2winsandbox/filein2winsandbox.py\", base=None, target_name=None, icon=\"C:/Users/lmdun/OneDrive/Desktop/my_project/filein2winsandbox/icon/icon.ico\"),\n"
+    ]
+}
