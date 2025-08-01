@@ -48,7 +48,7 @@ def include_file_finder():
     include_folder = filedialog.askdirectory()
     if include_folder:
         entry1b.delete(0, tk.END)
-        entry1b.insert(tk.END, include_folder)
+        entry1b.insert(tk.END, include_folder + "/")
 
 text0 = tk.Label (file_include, text="*Include Files/Folder")
 text0.place (x=10, y=10)
