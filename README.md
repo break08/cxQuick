@@ -50,6 +50,7 @@
 6. Click the **Build** button and wait while cx_Freeze generates your `.exe` file.
 
 Once done:
-- A temporary `setup.py` will be created in the `temp/` folder.
-- `cx_Freeze` will run using `os.system()` to build the `.exe`.
+- A `setup.py` will be created in the `saves/` folder.
+- `cx_Freeze` will build the `.exe`.
 - A success message will be shown once the process completes.
+
