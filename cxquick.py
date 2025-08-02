@@ -12,12 +12,14 @@ def runner(py, exe):
         except Exception as e:
             messagebox.showerror("Error", f"{e}")
 def opener (jsonfilea, key, entry: tk.Text):
+    entry.config (state = "normal")
     entry.delete (1.0, tk.END)
     with open(jsonfilea, "r", encoding="utf-8") as f:
         data = json.load(f)
         edata = data[key]
         for item in edata:
             entry.insert(tk.END, item)
+    entry.config(state = "disabled")
 def cleaner(jsonfilea, key):
     with open(jsonfilea, "r", encoding="utf-8") as f:
         data = json.load(f)
@@ -130,7 +132,10 @@ def includefile_clear():
 def include_file_finder():
     def running ():
         runner("include_file.py", "include_file.exe")
-    threading.Thread(target=running).start()    
+    threading.Thread(target=running).start()
+def load_all():
+    opener("dataexecutables.json", "executables", entry1)
+    opener("include_file_data.json", "include", entry13)
 
 main = tk.Tk()
 main.title ("cxQuick")
@@ -206,6 +211,7 @@ main.config(menu=menubar)
 filemenu = tk.Menu (menubar)
 menubar.add_cascade(label="File", menu=filemenu)
 filemenu.add_command(label="Exit", command=main.quit)
+filemenu.add_command (label = "Load Data", command = load_all)
 tools = tk.Menu (menubar)
 menubar.add_cascade(label = "Tools", menu=tools)
 tools.add_command(label = "Install cx_Freeze", command=lambda: os.startfile("cxfreeze_install.bat"))
@@ -226,13 +232,28 @@ button5.place (x = 470, y = 60)
 button6 = tk.Button (main, text = "Clear All Included", command = includefile_clear, width = 19)
 button6.place (x = 470, y = 180)
 
+scrolly2 = tk.Scrollbar(main, orient = tk.VERTICAL, command=entry13.yview)
+entry13.config(yscrollcommand=scrolly2.set)
+scrolly2.place(x=400, y=470, height=135)
+scrollx2 = tk.Scrollbar (main, orient = tk.HORIZONTAL, command = entry13.xview)
+entry13.config(xscrollcommand=scrollx2.set)
+scrollx2.place(x=10, y=600, width=390)
+
+load_all()
+
 def executables_checking():
-    entry1.config (state="normal")
-    entry13.config(state = "normal")
-    opener("dataexecutables.json", "executables", entry1)
-    opener("include_file_data.json", "include", entry13)
-    entry1.config (state="disabled")
-    entry13.config (state = "disabled")
+    with open ("check.json", "r", encoding="utf-8") as f:
+        keyjson=json.load(f)
+    if keyjson["exe"] == 1:
+        opener("dataexecutables.json", "executables", entry1)
+        with open ("check.json", "w", encoding="utf-8") as f:
+            keyjson["exe"] = 0
+            json.dump(keyjson, f, indent = 4)
+    if keyjson["include"] == 1:
+        opener("include_file_data.json", "include", entry13)
+        with open ("check.json", "w", encoding="utf-8") as f:
+            keyjson["include"] = 0
+            json.dump(keyjson, f, indent = 4)
     main.after(50, executables_checking)
 executables_checking()
 
