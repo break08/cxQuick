@@ -1,6 +1,3 @@
 {
-    "include": [
-        "(r\"C:/Users/lmdun/OneDrive/Desktop/my_project/filein2winsandbox/user-change.json\", \"user-change.json\"),\n",
-        "(r\"C:/Users/lmdun/OneDrive/Desktop/my_project/filein2winsandbox/LICENSE\", \"LICENSE\"),\n"
-    ]
+    "include": []
 }
