@@ -1,13 +1,8 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 import subprocess, os, threading, json
+import executable, include_file
 
-def runner(py):
-    try:
-        command = f"python {py}"
-        os.system(command)
-    except Exception as e:
-        messagebox.showerror("Error", f"{e}")
 def opener (jsonfilea, key, entry: tk.Text):
     entry.config (state = "normal")
     entry.delete (1.0, tk.END)
@@ -25,7 +20,7 @@ def cleaner(jsonfilea, key):
         json.dump(data, f, indent=4)
 def browse_file():
     def running ():
-        runner("executable.py")
+        executable.run_exe()
     threading.Thread(target=running).start()
 
 def output():
@@ -128,7 +123,7 @@ def includefile_clear():
     entry13.config (state = "disabled")
 def include_file_finder():
     def running ():
-        runner("include_file.py")
+        include_file.run_include()
     threading.Thread(target=running).start()
 def load_all():
     opener("dataexecutables.json", "executables", entry1)
@@ -253,6 +248,5 @@ def executables_checking():
             json.dump(keyjson, f, indent = 4)
     main.after(50, executables_checking)
 executables_checking()
-
 
 main.mainloop()
