@@ -18,7 +18,7 @@
   ```bash
   pip install cx_Freeze
 
-## 🚀 How to Use
+## How to Use
 
 1. Run `cxquick.py`.
 
@@ -53,4 +53,5 @@ Once done:
 - A `setup.py` will be created in the `saves/` folder.
 - `cx_Freeze` will build the `.exe`.
 - A success message will be shown once the process completes.
+
 
