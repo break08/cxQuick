@@ -2,15 +2,6 @@
 
 **cxQuick** is a graphical tool that simplifies converting `.py` Python scripts into `.exe` executables using [`cx_Freeze`](https://github.com/marcelotduarte/cx_Freeze).
 
-## 🖼 Features
-
-- Simple and clean Tkinter-based GUI.
-- Browse and select Python files and icon files.
-- Set metadata: name, version, and description.
-- Choose base: `Win32GUI` (no terminal) or `Console`.
-- Choose a custom output directory.
-- Auto-generates a `setup.py` and builds the executable.
-
 ## 📦 Requirements
 
 - Python 3.7+
@@ -53,5 +44,6 @@ Once done:
 - A `setup.py` will be created in the `saves/` folder.
 - `cx_Freeze` will build the `.exe`.
 - A success message will be shown once the process completes.
+
 
 
