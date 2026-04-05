@@ -2,6 +2,8 @@
 
 **cxQuick** is a graphical tool that simplifies converting `.py` Python scripts into `.exe` executables using [`cx_Freeze`](https://github.com/marcelotduarte/cx_Freeze).
 
+**Sourceforge**: https://sourceforge.net/projects/cxquick
+
 ## 📦 Requirements
 
 - Python 3.7+
